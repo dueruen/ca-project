@@ -34,7 +34,7 @@ jobs:
           name: Deploy to Testing
           command: |
               scp ./server.sh $SSH_USER@$SSH_HOST_TESTING:server.sh
-              ssh $SSH_USER@$SSH_HOST_TESTING "./server.sh"
+              ssh $SSH_USER@$SSH_HOST_TESTING "./server.sh"             
   deploy-production:
     machine: true
     steps:
@@ -45,6 +45,13 @@ jobs:
           command: |
               scp ./server.sh $SSH_USER@$SSH_HOST_PRODUCTION:server.sh
               ssh $SSH_USER@$SSH_HOST_PRODUCTION "./server.sh"
+
+  create-artifact:
+    docker:
+      - image: python:2
+    steps:
+      - store_artifacts:
+          path: .
 
 workflows:
   version: 2
@@ -64,6 +71,9 @@ workflows:
             branches:
               only:
                 - master
+      - create-artifact:
+          requires:
+            - deploy-testing
       - deploy-production:
           type: approval
           requires:
