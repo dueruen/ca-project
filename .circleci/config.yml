@@ -22,8 +22,9 @@ jobs:
           at: .
       - run: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker build -t $DOCKER_USER/ca-project:$CIRCLE_SHA1
+            docker build -t $DOCKER_USER/ca-project:$CIRCLE_SHA1 -t $DOCKER_USER/ca-project:latest .
             docker push $DOCKER_USER/ca-project:$CIRCLE_SHA1
+            docker push $DOCKER_USER/ca-project:latest
   deploy-testing:
     machine: true
     steps:
@@ -66,7 +67,6 @@ workflows:
       - hold:
           type: approval
           requires:
-            - test
             - deploy-testing
           filters:
             branches:
