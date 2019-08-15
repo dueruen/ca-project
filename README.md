@@ -1,4 +1,5 @@
 # Keystone project
+[![CircleCI](https://circleci.com/gh/dueruen/ca-project.svg?style=svg)](https://circleci.com/gh/dueruen/ca-project)
 
 This project is meant for you to make awesome software, with the skills in your Continuous Delivery and DevOps toolbox.
 Have fun, automate and be awesome!
