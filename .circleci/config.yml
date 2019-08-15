@@ -11,8 +11,6 @@ jobs:
       - run:
           name: Testing
           command: python tests.py
-      - store_test_results:
-          path: build/test-results
       - persist_to_workspace:
           root: .
           paths:
@@ -49,12 +47,16 @@ jobs:
               docker push $DOCKER_USER/ca-project:production
               scp ./server.sh $SSH_USER@$SSH_HOST_PRODUCTION:server.sh
               ssh $SSH_USER@$SSH_HOST_PRODUCTION "./server.sh"
+              
 workflows:
   version: 2
   main_flow:
     jobs:
       - test
       - dockerize:
+          filters:
+            branches:
+              only: master
           requires:
             - test
       - deploy-testing:
