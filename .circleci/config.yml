@@ -53,7 +53,7 @@ jobs:
       - checkout
       - run: 
           name: Installing zip
-          command: apt install zip
+          command: apt-get update && apt-get install zip
       - run: zip -r artifact.zip .
       - store_artifacts:
           path: .
