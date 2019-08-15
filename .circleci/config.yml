@@ -54,7 +54,8 @@ jobs:
           at: .
       - run: zip -r artifact.zip .
       - store_artifacts:
-          path: ./artifact.zip
+          path: .
+          destination: prefix
 
 workflows:
   version: 2
