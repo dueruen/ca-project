@@ -33,12 +33,10 @@ jobs:
       - run:
           name: Deploy to Testing
           command: |
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                docker tag $DOCKER_USER/ca-project:CIRCLE_SHA1 $DOCKER_USER/ca-project:testing
-                docker push $DOCKER_USER/ca-project:testing
-                scp ./server.sh $SSH_USER@$SSH_HOST_TESTING:server.sh
-                ssh $SSH_USER@$SSH_HOST_TESTING "./server.sh"
-              fi
+              docker tag $DOCKER_USER/ca-project:CIRCLE_SHA1 $DOCKER_USER/ca-project:testing
+              docker push $DOCKER_USER/ca-project:testing
+              scp ./server.sh $SSH_USER@$SSH_HOST_TESTING:server.sh
+              ssh $SSH_USER@$SSH_HOST_TESTING "./server.sh"
   deploy-production:
     machine: true
     steps:
@@ -63,6 +61,10 @@ workflows:
       - deploy-testing:
           requires:
             - dockerize
+          filters:
+            branches:
+              only:
+                - master
       - deploy-production:
           requires:
             - dockerize
