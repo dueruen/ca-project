@@ -49,6 +49,9 @@ workflows:
     jobs:
       - test
       - dockerize:
+          filters:
+            branches:
+              only: master
           requires:
             - test
       - deploy-testing:
