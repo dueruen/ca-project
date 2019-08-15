@@ -51,7 +51,7 @@ jobs:
       - image: ubuntu:18.04
     steps:
       - checkout
-      - run: apt-get install zip
+      - run: sudo apt-get install zip
       - run: zip -r artifact.zip .
       - store_artifacts:
           path: .
