@@ -30,6 +30,7 @@ jobs:
             docker push $DOCKER_USER/ca-project:latest
             fi
   deploy-testing:
+    machine: true
     steps:
       - run:
           name: Deploy to Testing
