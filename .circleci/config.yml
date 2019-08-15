@@ -69,12 +69,7 @@ workflows:
           requires:
             - dockerize
           filters:
-            # branches:
-            #   only: master
+            branches:
+              only: add-production
             tags:
-              only: /v.*/
-          # filters:
-          #   branches:
-          #     ignore: /.*/
-          #   tags:
-          #     only: /v[0-9]+(\.[0-9]+)+(\.[0-9]+)/
+              only: /v[0-9]+(\.[0-9]+)+(\.[0-9]+)/
