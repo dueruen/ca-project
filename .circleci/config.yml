@@ -46,10 +46,10 @@ jobs:
           name: Deploy to production
           command: |
               echo "production"
-              # if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              #   scp ./server.sh $SSH_USER@$SSH_HOST_PRODUCTION:server.sh
-              #   ssh $SSH_USER@$SSH_HOST_PRODUCTION "./server.sh"
-              # fi
+              # docker tag $DOCKER_USER/ca-project:CIRCLE_SHA1 $DOCKER_USER/ca-project:testing
+              # docker push $DOCKER_USER/ca-project:testing
+              # scp ./server.sh $SSH_USER@$SSH_HOST_TESTING:server.sh
+              # ssh $SSH_USER@$SSH_HOST_TESTING "./server.sh"
 workflows:
   version: 2
   main_flow:
@@ -69,7 +69,12 @@ workflows:
           requires:
             - dockerize
           filters:
-            branches:
-              ignore: /.*/
+            # branches:
+            #   only: master
             tags:
-              only: /v[0-9]+(\.[0-9]+)+(\.[0-9]+)/
+              only: /v.*/
+          # filters:
+          #   branches:
+          #     ignore: /.*/
+          #   tags:
+          #     only: /v[0-9]+(\.[0-9]+)+(\.[0-9]+)/
