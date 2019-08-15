@@ -48,10 +48,13 @@ jobs:
 
   create-artifact:
     docker:
-      - image: python:2
+      - image: alpine
     steps:
+      - attach_workspace:
+          at: .
+      - run: zip -r artifact.zip .
       - store_artifacts:
-          path: .
+          path: ./artifact.zip
 
 workflows:
   version: 2
