@@ -22,12 +22,11 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t $DOCKER_USER/ca-project:$CIRCLE_SHA1 -t $DOCKER_USER/ca-project:latest .
       - run: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker push $DOCKER_USER/ca-project:$CIRCLE_SHA1
-              docker push $DOCKER_USER/ca-project:latest
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker build -t $DOCKER_USER/ca-project:testing .
+              docker push $DOCKER_USER/ca-project:testing
             fi
   deploy-testing:
     machine: true
@@ -41,6 +40,19 @@ jobs:
                 scp ./server.sh $SSH_USER@$SSH_HOST:server.sh
                 ssh $SSH_USER@$SSH_HOST ". server.sh"
               fi
+  deploy-production:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Deploy to production
+          command: |
+              echo "production"
+              # if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              #   scp ./server.sh $SSH_USER@$SSH_HOST:server.sh
+              #   ssh $SSH_USER@$SSH_HOST ". server.sh"
+              # fi
 workflows:
   version: 2
   main_flow:
@@ -52,3 +64,11 @@ workflows:
       - deploy-testing:
           requires:
             - dockerize
+      - deploy-production:
+          requires:
+            - dockerize
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)+(\.[0-9]+)/
