@@ -35,7 +35,9 @@ jobs:
       - run:
           name: Deploy to Testing
           command: |
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
               ssh $SSH_USER@$SSH_HOST ". server.sh"
+              fi
 workflows:
   version: 2
   main_flow:
