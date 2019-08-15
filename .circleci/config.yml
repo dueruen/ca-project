@@ -48,7 +48,7 @@ jobs:
 
   create-artifact:
     docker:
-      - image: alpine
+      - image: alpine:latest
     steps:
       - attach_workspace:
           at: .
