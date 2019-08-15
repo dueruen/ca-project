@@ -50,8 +50,7 @@ jobs:
     docker:
       - image: ubuntu:18.04
     steps:
-      - attach_workspace:
-          at: .
+      - checkout
       - run: zip -r artifact.zip .
       - store_artifacts:
           path: .
