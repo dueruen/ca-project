@@ -5,7 +5,9 @@ jobs:
       - image: ubuntu:18.04
     steps:
       - checkout
-      - run: apt install python3-pip
+      - run:
+          name: Setup pip
+          command: apt-get install python-pip
       - run:
           name: Setup dependencies
           command: pip install -r requirements.txt
