@@ -48,7 +48,7 @@ jobs:
 
   create-artifact:
     docker:
-      - image: alpine:latest
+      - image: ubuntu:18.04
     steps:
       - attach_workspace:
           at: .
