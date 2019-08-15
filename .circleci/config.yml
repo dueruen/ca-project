@@ -15,6 +15,7 @@ jobs:
           root: .
           paths:
             - .
+
   dockerize:
     machine: true
     steps:
@@ -35,6 +36,7 @@ jobs:
           command: |
               scp ./server.sh $SSH_USER@$SSH_HOST_TESTING:server.sh
               ssh $SSH_USER@$SSH_HOST_TESTING "export TARGET=testing; . server.sh $CIRCLE_SHA1"
+
   functional_test:
     machine: true
     steps:
@@ -45,6 +47,19 @@ jobs:
           command: |
               scp ./curl_test.sh $SSH_USER@$SSH_HOST_TESTING:curl_test.sh
               ssh $SSH_USER@$SSH_HOST_TESTING . curl_test.sh
+
+  package:
+    image: ubuntu:18.04
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build release zip
+          command: mkdir ./release && zip -r ./release/$CIRCLE_SHA1 ./
+      - store_artifacts:
+          path: ./releases/
+          destination: releases
+
   deploy-production:
     machine: true
     steps:
@@ -82,6 +97,14 @@ workflows:
               only:
                 - master
       - deploy-production:
+          requires:
+            - functional_test
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /v[0-9]+(\.[0-9]+)+(\.[0-9]+)/
+      - package:
           requires:
             - functional_test
           filters:
