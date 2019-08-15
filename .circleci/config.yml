@@ -23,11 +23,8 @@ jobs:
       - attach_workspace:
           at: .
       - run: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker build -t $DOCKER_USER/ca-project:testing .
-              docker push $DOCKER_USER/ca-project:testing
-            fi
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker build -t $DOCKER_USER/ca-project:CIRCLE_SHA1 .
   deploy-testing:
     machine: true
     steps:
@@ -37,8 +34,10 @@ jobs:
           name: Deploy to Testing
           command: |
               if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                scp ./server.sh $SSH_USER@$SSH_HOST:server.sh
-                ssh $SSH_USER@$SSH_HOST ". server.sh"
+                docker tag $DOCKER_USER/ca-project:CIRCLE_SHA1 $DOCKER_USER/ca-project:testing
+                docker push $DOCKER_USER/ca-project:testing
+                scp ./server.sh $SSH_USER@$SSH_HOST_TESTING:server.sh
+                ssh $SSH_USER@$SSH_HOST_TESTING "./server.sh"
               fi
   deploy-production:
     machine: true
@@ -50,8 +49,8 @@ jobs:
           command: |
               echo "production"
               # if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              #   scp ./server.sh $SSH_USER@$SSH_HOST:server.sh
-              #   ssh $SSH_USER@$SSH_HOST ". server.sh"
+              #   scp ./server.sh $SSH_USER@$SSH_HOST_PRODUCTION:server.sh
+              #   ssh $SSH_USER@$SSH_HOST_PRODUCTION "./server.sh"
               # fi
 workflows:
   version: 2
