@@ -14,3 +14,8 @@ jobs:
           root: .
           paths:
             - .
+workflows:
+  version: 2
+  main_flow:
+    jobs:
+      - test
