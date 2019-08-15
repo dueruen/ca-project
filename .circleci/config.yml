@@ -12,9 +12,9 @@ jobs:
           name: Testing
           command: python tests.py
       - store_test_results:
-          path: test-results
+          path: .
       - store_artifacts:
-          path: test-results
+          path: .
       - persist_to_workspace:
           root: .
           paths:
