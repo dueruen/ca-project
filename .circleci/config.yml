@@ -107,3 +107,7 @@ workflows:
       - package:
           requires:
             - test
+          filters:
+            branches:
+              only:
+                - master
